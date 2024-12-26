@@ -2,12 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Green cube waow :O</title>
+    <title>Shader codes in HTML waow! :O</title>
     <style>
       body { margin: 0; }
     </style>
   </head>
   <body>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      void main() {
+          gl_Position = vec4( position, 1.0 );
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      uniform vec2 u_resolution;
+      uniform float u_time;
+
+      // Plot a line on Y using a value between 0.0-1.0
+      float plot(vec2 st) {    
+	  return smoothstep(0.02, 0.0, abs(st.y - st.x));
+      }
+
+      void main() {
+	  vec2 st = gl_FragCoord.xy/u_resolution;
+
+	  float y = st.x;
+
+	  vec3 color = vec3(y);
+
+	  // Plot a line
+	  float pct = plot(st);
+	  color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+
+	  gl_FragColor = vec4(color,1.0);
+      }
+    </script>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

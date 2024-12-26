@@ -6,59 +6,42 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
-document.body.appendChild(renderer.domElement);
 
-// Create a plane geometry
-const geometry = new THREE.PlaneGeometry(1, 2);
+const container = document.getElementById( 'container' );
+//document.body.appendChild(renderer.domElement);
+container.appendChild(renderer.domElement);
 
-// Vertex Shader
-const vertexShader = `
-  void main() {
-    gl_Position = vec4( position, 1.0 );
-  }
-`;
+const geometry = new THREE.PlaneGeometry( 1, 1 );
 
-// Fragment Shader
-const fragmentShader = `
-  uniform vec2 u_resolution;
-  uniform float u_time;
-
-  void main() {
-    vec2 st = gl_FragCoord.xy / u_resolution.xy;
-    gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // Simple gradient
-  }
-`;
-
-// Shader Material with uniforms
 const material = new THREE.ShaderMaterial({
-  vertexShader: vertexShader,
-  fragmentShader: fragmentShader,
-  uniforms: {
-    u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-    u_time: { value: 0.0 }
-  }
-});
+    uniforms: {
+	u_time : { value: 1.0 },
+	u_resolution : { value: new THREE.Vector2(window.innerWidth, window.innerHeight)}
+    },
 
-// Create a mesh with the plane geometry and shader material
-const plane = new THREE.Mesh(geometry, material);
-scene.add(plane);
+    vertexShader: document.getElementById( 'vertexShader' ).textContent,
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+})
+
+// const plane = new THREE.Mesh( geometry, material );
+const plane = new THREE.Mesh( geometry, material );
+scene.add( plane );
 
 // Position the camera
-camera.position.z = 0;
+camera.position.z = 5;
 
 // Resize handler
 window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 }
 
 // Animation loop
 function animate(time) {
     material.uniforms.u_time.value = time * 0.001; // Convert to seconds
-
     renderer.render(scene, camera);
 }
