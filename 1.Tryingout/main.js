@@ -8,15 +8,13 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 
 const container = document.getElementById( 'container' );
-//document.body.appendChild(renderer.domElement);
 container.appendChild(renderer.domElement);
 
-const geometry = new THREE.PlaneGeometry( 1, 1 );
+const geometry = new THREE.PlaneGeometry( 2, 2 );
 
 const material = new THREE.ShaderMaterial({
     uniforms: {
 	u_time : { value: 1.0 },
-	u_resolution : { value: new THREE.Vector2(window.innerWidth, window.innerHeight)}
     },
 
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
@@ -28,20 +26,19 @@ const plane = new THREE.Mesh( geometry, material );
 scene.add( plane );
 
 // Position the camera
-camera.position.z = 5;
+camera.position.z = 2;
 
 // Resize handler
 window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
-    material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 }
 
 // Animation loop
-function animate(time) {
+function animate(time) {  
     material.uniforms.u_time.value = time * 0.001; // Convert to seconds
     renderer.render(scene, camera);
 }
