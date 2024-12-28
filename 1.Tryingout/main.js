@@ -18,7 +18,8 @@ const material = new THREE.ShaderMaterial({
     },
 
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+    //side: THREE.DoubleSide // Not needed honestly, unless I want rotation
 })
 
 // const plane = new THREE.Mesh( geometry, material );
@@ -38,7 +39,10 @@ function onWindowResize() {
 }
 
 // Animation loop
-function animate(time) {  
+function animate(time) {
+    // //Rotation !!! Enable DoubleSide in shaders if doing so
+    // plane.rotation.x += 0.01;
+    // plane.rotation.y += 0.01;    
     material.uniforms.u_time.value = time * 0.001; // Convert to seconds
     renderer.render(scene, camera);
 }
