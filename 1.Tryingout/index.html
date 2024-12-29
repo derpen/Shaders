@@ -18,23 +18,31 @@
       }
     </script>
     <script id="fragmentShader" type="x-shader/x-fragment">
+      #define PI 3.14159265359
+
       varying vec2 vUv;
       uniform float u_time;
 
       // Plot a line on Y using a value between 0.0-1.0
-      float plot(vec2 st) {    
-	  return smoothstep(0.02, 0.0, abs(st.y - st.x));
+      float plot(vec2 st, float pct) {    
+	  // return smoothstep(0.02, 0.0, abs(st.y - st.x));
+	  return smoothstep( pct-0.02, pct, st.y) - smoothstep( pct, pct+0.02, st.y);	  
       }
 
       void main() {
 	  vec2 st = vUv;
 
-	  float y = st.x;
-
+	  // float y = pow(st.x, 3.0);
+	  // float y = step(0.5, st.x);
+	  // float y = smoothstep(0.1, 0.9, st.x);
+	  // float y = smoothstep(0.2,0.5,st.x) - smoothstep(0.5,0.8,st.x);
+	  //float y = pow(min(cos(PI * st.x / 2.0), 1.0 - abs(st.x)), 1.0);
+	  float y = 1.0 - pow(max(0.0, abs(st.x) * 2.0 - 1.0), 0.5);
+	  
 	  vec3 color = vec3(y);
 
 	  // Plot a line
-	  float pct = plot(st);
+	  float pct = plot(st, y);
 	  color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
 
 	  gl_FragColor = vec4(color, 1.0);	  
