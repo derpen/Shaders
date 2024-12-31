@@ -42,15 +42,19 @@
 	  }
       }
 
+      float indoFlag(float y){
+	  return step(0.5, y);
+      }
+
+      vec3 indoFlagRed = vec3(1.0, 0.0, 0.0);
+      vec3 indoFlagWhite = vec3(1.0);
+
       void main() {
 	  vec2 st = vUv;
 
-	  vec3 pct = vec3(st.x);
-
-	  pct.r = easeInOutQuint(st.x);
-	  //pct.g = easeInOutQuint(st.x);
-
-	  vec3 color = mix(colorA, colorB, pct);
+	  // Indo flag with shaders and step
+	  float indoMix = indoFlag(st.y);
+	  vec3 color = mix(indoFlagWhite, indoFlagRed, indoMix);
 	  	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
