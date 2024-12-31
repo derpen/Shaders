@@ -23,28 +23,35 @@
       varying vec2 vUv;
       uniform float u_time;
 
+      vec3 colorA = vec3(0.149, 0.141, 0.912);
+      vec3 colorB = vec3(1.000, 0.833, 0.224);
+
       // Plot a line on Y using a value between 0.0-1.0
       float plot(vec2 st, float pct) {    
 	  // return smoothstep(0.02, 0.0, abs(st.y - st.x));
 	  return smoothstep( pct-0.02, pct, st.y) - smoothstep( pct, pct+0.02, st.y);	  
       }
 
+      // https://easings.net/#easeInOutQuint
+      float easeInOutQuint(float x){
+	  if(x < 0.5){
+	      return 16.0 * x * x * x * x * x;
+	  }
+	  else {
+	      return 1.0 - pow(-2.0 * x + 2.0, 5.0) / 2.0;
+	  }
+      }
+
       void main() {
 	  vec2 st = vUv;
 
-	  // float y = pow(st.x, 3.0);
-	  // float y = step(0.5, st.x);
-	  // float y = smoothstep(0.1, 0.9, st.x);
-	  // float y = smoothstep(0.2,0.5,st.x) - smoothstep(0.5,0.8,st.x);
-	  //float y = pow(min(cos(PI * st.x / 2.0), 1.0 - abs(st.x)), 1.0);
-	  float y = 1.0 - pow(max(0.0, abs(st.x) * 2.0 - 1.0), 0.5);
-	  
-	  vec3 color = vec3(y);
+	  vec3 pct = vec3(st.x);
 
-	  // Plot a line
-	  float pct = plot(st, y);
-	  color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+	  pct.r = easeInOutQuint(st.x);
+	  //pct.g = easeInOutQuint(st.x);
 
+	  vec3 color = mix(colorA, colorB, pct);
+	  	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
       }
