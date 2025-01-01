@@ -10,6 +10,26 @@ renderer.setAnimationLoop(animate);
 const container = document.getElementById( 'container' );
 container.appendChild(renderer.domElement);
 
+const links = document.getElementById( 'links-to-others' );
+
+const linksData = [
+    {text: 'Main', href:'index.html'},
+    {text: 'Color Test', href:'color-test.html'},    
+];
+
+const ulElement = document.createElement('ul');
+
+linksData.forEach(link => {
+    const liElement = document.createElement('li');
+    const aElement = document.createElement('a');
+    aElement.href = link.href;
+    aElement.textContent = link.text;
+    liElement.appendChild(aElement);
+    ulElement.appendChild(liElement);
+});
+
+links.appendChild(ulElement);
+
 const geometry = new THREE.PlaneGeometry( 2, 2 );
 
 const material = new THREE.ShaderMaterial({
@@ -19,7 +39,7 @@ const material = new THREE.ShaderMaterial({
 
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
     fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
-    //side: THREE.DoubleSide // Not needed honestly, unless I want rotation
+    // side: THREE.DoubleSide // Not needed honestly, unless I want rotation
 })
 
 // const plane = new THREE.Mesh( geometry, material );
