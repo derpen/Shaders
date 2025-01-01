@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Color Test \^^/</title>
+    <title>Hue, Saturation, Brightness \^^/</title>
     <style>
       body { margin: 0; }
     </style>
@@ -19,21 +19,39 @@
       }
     </script>
     <script id="fragmentShader" type="x-shader/x-fragment">
-      #define PI 3.14159265359
+#define PI 3.14159265359
+#define TWO_PI 6.28318530718
 
       varying vec2 vUv;
       uniform float u_time;
 
-      // Plot a line on Y using a value between 0.0-1.0
-      float plot(vec2 st, float pct) {    
-	  // return smoothstep(0.02, 0.0, abs(st.y - st.x));
-	  return smoothstep( pct-0.02, pct, st.y) - smoothstep( pct, pct+0.02, st.y);	  
+      vec3 hsb2rgb( in vec3 c ){
+	  vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+				   6.0)-3.0)-1.0,
+			   0.0,
+			   1.0 );
+	  rgb = rgb*rgb*(3.0-2.0*rgb);
+	  // rgb.r = 
+	  return c.z * mix( vec3(1.0), rgb, c.y);
       }
 
       void main() {
 	  vec2 st = vUv;
-
 	  vec3 color = vec3(1.0);
+	  
+	  // Use polar coordinates instead of cartesian
+	  vec2 toCenter = vec2(0.5)-st;
+
+	  float angle = atan(toCenter.y, toCenter.x);
+
+	  // Spin !
+	  angle = angle + u_time * 2.0;
+	  
+	  float radius = length(toCenter)*2.0;
+
+	  // Map the angle (-PI to PI) to the Hue (from 0 to 1)
+	  // and the Saturation to the radius	  
+	  color = hsb2rgb(vec3(angle/TWO_PI, radius, 1.0));
 	  	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
