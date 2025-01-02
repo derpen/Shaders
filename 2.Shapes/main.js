@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 
 const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0.1, 0.1, 0.1);
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer();
@@ -13,7 +16,8 @@ container.appendChild(renderer.domElement);
 const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
-    {text: 'Main', href:'index.html'},
+    {text: 'Box', href:'index.html'},
+    {text: 'Circle', href:'circle.html'},    
 ];
 
 const ulElement = document.createElement('ul');
