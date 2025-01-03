@@ -24,22 +24,37 @@
       varying vec2 vUv;
       uniform float u_time;
 
-      float create_circle(vec2 st, float size){
-	  float distance = distance(st, vec2(0.5));
-	  distance = step(size, distance);
+      float create_circle(vec2 st,
+			  vec2 pos,
+			  float border_size,
+			  float size){
+	  float distance = distance(st, pos);
+	  
+	  distance = smoothstep(size - border_size, size + border_size, distance);
+	  
 	  distance = 1.0 - distance;
 	  return distance;
       }
+
+      float easeOutQuint(float x){
+	  return 1.0 - pow(1.0 - x, 5.0);
+      }
+
+      // Color in circle
+      vec3 circleColor = vec3(1.0, 0.0, 0.0);
 
       void main() {
 	  vec2 st = vUv;
 
 	  // Make a resizing circle :D
-	  float circle_size = clamp(sin(u_time), 0.1, 0.5);
+	  float circle_size = clamp(sin(u_time), 0.1, 0.2);
+	  circle_size = clamp(easeOutQuint(sin(u_time)), 0.0, 0.5);
 
-	  float circle = create_circle(st, circle_size);
+	  vec2 circle_pos = vec2(0.5, 0.5);
+	  float border_size = 0.001;
+	  float circle = create_circle(st, circle_pos, border_size, circle_size);
 
-	  vec3 color = vec3(circle);
+	  vec3 color = vec3(circle) * circleColor;
 	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
