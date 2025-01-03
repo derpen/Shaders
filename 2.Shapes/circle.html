@@ -24,12 +24,22 @@
       varying vec2 vUv;
       uniform float u_time;
 
+      float create_circle(vec2 st, float size){
+	  float distance = distance(st, vec2(0.5));
+	  distance = step(size, distance);
+	  distance = 1.0 - distance;
+	  return distance;
+      }
+
       void main() {
 	  vec2 st = vUv;
 
-	  float distance = distance(st, vec2(0.5));
+	  // Make a resizing circle :D
+	  float circle_size = clamp(sin(u_time), 0.1, 0.5);
 
-	  vec3 color = vec3(distance);
+	  float circle = create_circle(st, circle_size);
+
+	  vec3 color = vec3(circle);
 	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
