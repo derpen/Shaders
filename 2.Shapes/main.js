@@ -17,7 +17,8 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'Box', href:'index.html'},
-    {text: 'Circle', href:'circle.html'},    
+    {text: 'Circle', href:'circle.html'},
+    {text: 'Distance Field', href:'distance-field.html'},        
 ];
 
 const ulElement = document.createElement('ul');

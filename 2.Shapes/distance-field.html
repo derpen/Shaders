@@ -27,13 +27,7 @@
       void main() {
 	  vec2 st = vUv;
 
-	  vec2 lb = step(vec2(0.1), st);
-	  float pct = lb.x * lb.y;
-
-	  vec2 rt = step(vec2(0.1), 1.0-st);
-	  pct *= rt.x * rt.y;
-	  
-	  vec3 color = vec3(pct);
+	  vec3 color = vec3(0.5);
 	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
