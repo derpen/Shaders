@@ -20,6 +20,7 @@
     </script>
     <script id="fragmentShader" type="x-shader/x-fragment">
       #define PI 3.14159265359
+      #define TWO_PI 6.28318530718
 
       varying vec2 vUv;
       uniform float u_time;
@@ -28,6 +29,22 @@
 	  vec2 st = vUv;
 
 	  vec3 color = vec3(0.9);
+
+	  st = (st * 2.0) - 1.0;
+
+	  int N = 3; // Amount of side
+
+	  // float radius = distance(st, vec2(0.5));
+	  float angle = atan(st.x, st.y) + PI;
+
+	  float radius = TWO_PI/float(N); // no clue what this does honestly lol
+
+	  float shape = cos(floor(0.5 + angle/radius) * radius - angle) * length(st); // no fucking clue about this one either ill be real
+
+	  shape = 1.0 - smoothstep(0.4, 0.41, shape); // This one turns it into a smooth shape
+
+	  color = vec3(shape);
+	  
 	  gl_FragColor = vec4(color, 1.0);
       }
     </script>
