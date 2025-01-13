@@ -37,10 +37,23 @@
 	  
       }
 
+      mat2 rotate2d(float _angle){
+	  return mat2(cos(_angle), -sin(_angle),
+		      sin(_angle), cos(_angle));
+      }
+
       void main() {
 	  vec2 st = vUv;
 
 	  vec3 color = vec3(1.0);
+
+	  st -= vec2(0.5);
+
+	  st = rotate2d(sin(u_time) * PI) * st;
+
+	  st += vec2(0.5);
+
+	  color = vec3(crossShape(st, 0.4));
 	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
