@@ -37,10 +37,16 @@
 	  
       }
 
+      float parabola( float x, float k ){
+	  return pow( 4.0*x*(1.0-x), k );
+      }
+
       void main() {
 	  vec2 st = vUv;
 
-	  vec2 translate = vec2(sin(u_time), cos(u_time));
+	  // Attempting to make pendulum (epic fail)
+	  float verticalMotion = parabola(sin(u_time), 1.0);
+	  vec2 translate = vec2(sin(u_time), clamp(verticalMotion, 0.3, 0.6));
 	  st += translate * 0.25;
 
 	  vec3 color = vec3(box(st, vec2(0.25))); // Box
