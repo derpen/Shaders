@@ -37,10 +37,20 @@
 	  
       }
 
+      mat2 scale(vec2 _scale){
+	  return mat2(_scale.x, 0.0,
+		      0.0, _scale.y);
+      }
+
       void main() {
 	  vec2 st = vUv;
 
-	  vec3 color = vec3(0.5);
+	  st -= vec2(0.5);
+	  vec2 scl = vec2(sin(u_time)+1.0);
+	  st = scale(scl) * st;
+	  st += vec2(0.5);
+
+	  vec3 color = vec3(crossShape(st, 0.2));
 	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
