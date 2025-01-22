@@ -16,7 +16,8 @@ container.appendChild(renderer.domElement);
 const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
-    {text: 'index', href:'index.html'},
+    {text: 'circles', href:'index.html'},
+    {text: 'basic matrix transform', href:'basic-matrix-transform.html'},    
 ];
 
 const ulElement = document.createElement('ul');

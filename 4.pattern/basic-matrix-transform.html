@@ -24,18 +24,44 @@
       varying vec2 vUv;
       uniform float u_time;
 
+      vec2 rotate2D(vec2 _st, float _angle){
+	  _st -= 0.5;
+	  _st = mat2(cos(_angle), -sin(_angle),
+		     sin(_angle), cos(_angle)) * _st;
+	  _st += 0.5;
+	  return _st;
+      }
+
       float circle(in vec2 _st, in float _size){
 	  vec2 l = _st - vec2(0.5);
 	  return 1.0 - smoothstep(_size-(_size * 0.01), _size+(_size * 0.01), dot(l, l) * 4.0); // kind of forgot what this does tbh lol
       }
 
+      // no idea why this one does not use "in" keyword
+      vec2 tile(vec2 _st, float _zoom){
+	  _st *= _zoom;
+	  return fract(_st);
+      }
+
+      float box(vec2 _st, vec2 _size, float _smoothedge){
+	  _size = vec2(0.5) - _size * 0.5;
+	  vec2 aa = vec2(_smoothedge * 0.5);
+	  vec2 uv = smoothstep(_size, _size+aa, _st);
+	  uv *= smoothstep(_size, _size+aa, vec2(1.0) - _st);
+	  return uv.x * uv.y;
+      }
+
       void main() {
 	  vec2 st = vUv;
 
-	  st *= 5.0;
-	  st = fract(st);
+	  st = tile(st, 15.0);
 
+	  // rotate 45 deg
+	  st = rotate2D(st, PI * 0.25);
+	  
+	      
 	  vec3 color = vec3(circle(st, 0.3));
+	  color = vec3(box(st, vec2(0.7), 0.01)); //box
 
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
