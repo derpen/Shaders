@@ -17,7 +17,9 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'circles', href:'index.html'},
-    {text: 'basic matrix transform', href:'basic-matrix-transform.html'},    
+    {text: 'basic matrix transform', href:'basic-matrix-transform.html'},
+    {text: 'bricks', href:'bricks.html'},
+    {text: 'truchet tiles', href:'truchet.html'},        
 ];
 
 const ulElement = document.createElement('ul');
