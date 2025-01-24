@@ -51,18 +51,54 @@
 	  return uv.x * uv.y;
       }
 
-      float bricks(vec2 _st, vec2 _size){
-	  return 0.5;
+      vec2 rotateTilePattern(vec2 _st){
+	  // scale up
+	  _st *= 2.0;
+
+	  // give each cell an index number
+	  // according to its position
+	  // tbh, i don't get it lmaoo
+	  float index = 0.0;
+	  index += step(1.0, mod(_st.x, 2.0));
+	  index += step(1.0, mod(_st.y, 2.0)) * 2.0;
+
+	  //      |
+	  //  2   |   3
+	  //      |
+	  //--------------
+	  //      |
+	  //  0   |   1
+	  //      |	  
+
+	  // Make each cell between 0.0 - 1.0;
+	  _st = fract(_st);
+
+	  // rotate each cell according to index
+	  // this is cringe
+	  if(index == 1.0){
+	      _st = rotate2D(_st, PI * 0.5); // rotate 90 deg
+	  } else if (index == 2.0){
+	      _st = rotate2D(_st, PI * -0.5); // rotate -90 deg	      
+	  } else if (index == 3.0) {
+	      _st = rotate2D(_st, PI); // rotate 180 deg	      
+	  }
+	  
+	  return _st;
       }
       
       void main() {
 	  vec2 st = vUv;
 
-	  st = tile(st, 15.0);
+	  st = tile(st, 3.0);
+	  st = rotateTilePattern(st);
 
-	  vec3 color = vec3(0.2);
+	  // Make more interesting combinations
+	  // st = tile(st,2.0);
+	  st = rotate2D(st,-PI*u_time*0.25);
+	  // st = rotateTilePattern(st*2.);
+	  // st = rotate2D(st,PI*u_time*0.25);	  
 
-	  gl_FragColor = vec4(color, 1.0);
+	  gl_FragColor = vec4(vec3(step(st.x, st.y)), 1.0);
 	  // gl_FragColor = vec4(st, 0.0, 1.0); // Uncomment to see coordinate      
 	  
       }
