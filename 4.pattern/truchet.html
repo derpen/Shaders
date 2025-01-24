@@ -54,7 +54,7 @@
       float bricks(vec2 _st, vec2 _size){
 	  return 0.5;
       }
-
+      
       void main() {
 	  vec2 st = vUv;
 
@@ -62,7 +62,8 @@
 
 	  vec3 color = vec3(0.2);
 
-	  gl_FragColor = vec4(color, 1.0);	  
+	  gl_FragColor = vec4(color, 1.0);
+	  // gl_FragColor = vec4(st, 0.0, 1.0); // Uncomment to see coordinate      
 	  
       }
     </script>
