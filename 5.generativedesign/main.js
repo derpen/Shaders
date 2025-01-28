@@ -17,6 +17,7 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'random', href:'index.html'},
+    {text: 'blocks', href:'blocks.html'},    
 ];
 
 const ulElement = document.createElement('ul');
