@@ -29,13 +29,18 @@
 	  return 1.0 - smoothstep(_size-(_size * 0.01), _size+(_size * 0.01), dot(l, l) * 4.0);
       }
 
+      float random(vec2 _st){
+	  return fract(sin(dot(_st, vec2(12.344, 53.235))) * 4382.3234);	  
+      }
+
       void main() {
 	  vec2 st = vUv;
 
 	  st *= 5.0;
-	  st = fract(st);
+	  // st = fract(st);
 
 	  vec3 color = vec3(circle(st, 0.3));
+	  color = vec3(random(st));
 
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
