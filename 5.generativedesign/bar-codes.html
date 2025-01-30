@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shader codes in HTML waow! :O</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="links-to-others"></div>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      
+      void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      #define PI 3.14159265359
+
+      varying vec2 vUv;
+      uniform float u_time;
+
+      float circle(in vec2 _st, in float _size){
+	  vec2 l = _st - vec2(0.5);
+	  return 1.0 - smoothstep(_size-(_size * 0.01), _size+(_size * 0.01), dot(l, l) * 4.0);
+      }
+
+      float random(vec2 _st){
+	  return fract(sin(dot(_st, vec2(12.344, 53.235))) * 4382.3234);	  
+      }
+
+      float divide(float boxes){
+	  float current;
+	  if(boxes > 0.5){
+	      current = 1.0;
+	  } else {
+	      current = 0.0;
+	  }
+	  return current;
+      }
+      
+      void main() {
+	  vec2 st = vUv;
+
+	  float multiplier = 20.0;
+
+	  st *= multiplier;
+
+	  float movespeed = 5.0;
+
+	  // another if statement, kind of cringe
+	  if(st.y > multiplier / 2.0){
+	      st.x -= u_time * movespeed;     
+	  } else {
+	      st.x += u_time * movespeed;
+	  }
+
+
+	  vec2 ipos = floor(st);
+
+	  float boxes = random(ipos);
+
+	  vec3 color = vec3(divide(boxes));
+	  
+	  gl_FragColor = vec4(color, 1.0);
+	  // gl_FragColor = vec4(st.x, st.y, 0.0, 1.0);
+      }
+    </script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
