@@ -45,20 +45,33 @@
 	  return current;
       }
 
-      float multiplier = 20.0;
+      float multiplier = 100.0;
       
       vec2 move(in vec2 _st){
 	  float movespeed = 5.0;
+
+	  // another if statement, kind of cringe tbh
 	  
-	  // another if statement, kind of cringe tbh	  
 	  // if(_st.y > multiplier / 2.0){
-	  if(_st.y > 1.0){	      
-	      _st.x -= u_time * movespeed;     
+	  if(_st.y > 1.0){
+	      _st.x -= u_time * movespeed;
 	  } else {
 	      _st.x += u_time * movespeed;
 	  }
 
 	  return _st;
+      }
+
+      float divide(float boxes, float threshold){
+	  float current;
+
+	  if(boxes > threshold){
+	      current = 1.0;
+	  } else {
+	      current = 0.0;
+	  }
+	  
+	  return current;
       }
       
       void main() {
@@ -73,11 +86,16 @@
 	  vec2 fpos = fract(st);
 
 	  float boxes = random(ipos);
+	  float threshold = random(fpos);
 	  
-	  vec3 color = vec3(divide(boxes));
+	  // vec3 color = vec3(divide(boxes));
+	  // vec3 color = vec3(divide(boxes, threshold));
+	  vec3 color = vec3(divide(boxes, 0.2345));
 	  // color = vec3(boxes);
+	  // color = vec3(threshold);
 	  
 	  gl_FragColor = vec4(color, 1.0);
+	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0);
       }
     </script>
     <script type="module" src="/main.js"></script>
