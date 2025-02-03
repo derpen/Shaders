@@ -29,14 +29,33 @@
 	  return 1.0 - smoothstep(_size-(_size * 0.01), _size+(_size * 0.01), dot(l, l) * 4.0); // kind of forgot what this does tbh lol
       }
 
+      float random(in vec2 _st){
+	  return fract(sin(dot(_st, vec2(33.52, 963.36))) * 4323.55319);
+      }
+
+      float noise_move(in vec2 _st){
+	  vec2 i = floor(_st);
+	  vec2 f = fract(_st);
+
+	  float a = random(i);
+	  float b = random(i + vec2(1.0, 0.0));
+	  float c = random(i + vec2(0.0, 1.0));
+	  float d = random(i + vec2(1.0, 1.0));
+
+	  // Smoothstep (Cubic Hermine Curve)
+	  vec2 u = f * f * (3.0 - 2.0 * f);
+	  
+	  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y; // I don't even know anymore lol
+      }
+
       void main() {
 	  vec2 st = vUv;
 
+	  vec3 color = vec3(circle(st, 0.3) - circle(st, 0.2));
+
 	  st *= 5.0;
-	  st = fract(st);
-
-	  vec3 color = vec3(circle(st, 0.3));
-
+	  color = vec3(noise_move(st));
+	  
 	  gl_FragColor = vec4(color, 1.0);	  
 	  
       }
