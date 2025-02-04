@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shader codes in HTML waow! :O</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="links-to-others"></div>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      
+      void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      #define PI 3.14159265359
+
+      varying vec2 vUv;
+      uniform float u_time;
+
+      float circle(in vec2 _st, in float _size){
+	  vec2 l = _st - vec2(0.5);
+	  return 1.0 - smoothstep(_size-(_size * 0.01), _size+(_size * 0.01), dot(l, l) * 4.0); // kind of forgot what this does tbh lol
+      }
+
+      float random(in vec2 _st){
+	  return fract(sin(dot(_st, vec2(33.52, 963.36))) * 4323.55319);
+      }
+
+      float noise_move(in vec2 _st){
+	  vec2 i = floor(_st);
+	  vec2 f = fract(_st);
+
+	  float a = random(i);
+	  float b = random(i + vec2(1.0, 0.0));
+	  float c = random(i + vec2(0.0, 1.0));
+	  float d = random(i + vec2(1.0, 1.0));
+
+	  // Smoothstep (Cubic Hermine Curve)
+	  vec2 u = f * f * (3.0 - 2.0 * f);
+	  
+	  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y; // I don't even know anymore lol
+      }
+
+      void main() {
+	  vec2 st = vUv;
+
+	  vec3 color = vec3(circle(st, 0.3) - circle(st, 0.2));
+
+	  st *= 10.0;
+	  color = vec3(noise_move(st));
+	  
+	  gl_FragColor = vec4(color, 1.0);	  
+	  
+      }
+    </script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

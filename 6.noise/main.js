@@ -17,6 +17,7 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'Noise', href:'index.html'},
+    {text: 'Simplex Noise', href:'simplex.html'},    
 ];
 
 const ulElement = document.createElement('ul');
