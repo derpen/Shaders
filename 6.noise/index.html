@@ -45,7 +45,7 @@
 	  // Smoothstep (Cubic Hermine Curve)
 	  vec2 u = f * f * (3.0 - 2.0 * f);
 	  
-	  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y; // I don't even know anymore lol
+	  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y; // Interpolating between all four corners of cube or whatever idk lol
       }
 
       void main() {
