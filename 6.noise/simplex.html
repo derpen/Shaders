@@ -53,8 +53,8 @@
 
 	  st *= 10.0;
 
-	  //Skew
-	  color.rg = fract(skew(st));
+	  //Skew, this line is already in simpleGrid function
+	  //color.rg = fract(skew(st));
 
 	  //Subdivide grid into equilateral triangles
 	  color = simplexGrid(st);
