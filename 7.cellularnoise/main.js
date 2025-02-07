@@ -17,6 +17,7 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'Cellular Noise', href:'index.html'},
+    {text: 'Voronoi Noise', href:'voronoi.html'},    
 ];
 
 const ulElement = document.createElement('ul');
