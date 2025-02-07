@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shader codes in HTML waow! :O</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="links-to-others"></div>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      
+      void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      #define PI 3.14159265359
+
+      varying vec2 vUv;
+      uniform float u_time;
+
+      void main() {
+	  vec2 st = vUv;
+
+	  vec3 color = vec3(0.0);
+	  
+	  gl_FragColor = vec4(color, 1.0);	  
+      }
+    </script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
