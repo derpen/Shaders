@@ -19,17 +19,49 @@
       }
     </script>
     <script id="fragmentShader" type="x-shader/x-fragment">
-      #define PI 3.14159265359
+#define PI 3.14159265359
+
+      // This is to determine the head
+#define FORWARD normalize((vec2(0.5, 0.0) * 2.0) - 1.0)
+#define SPEED 0.4
 
       varying vec2 vUv;
       uniform float u_time;
 
+      vec3 color_one = vec3(1.0); // white
+      vec3 color_two = vec3(0.0); // blek
+
       void main() {
+	  // Currently stolen from
+	  // https://www.shadertoy.com/view/7tsBDn
+	  // Will make original one soon
+	  // TO improve:
+	  // Need like a shadow in the spinner, right now too linear
+	  
 	  vec2 st = vUv;
 
-	  vec3 color = vec3(0.0);
-	  
-	  gl_FragColor = vec4(color, 1.0);	  
+	  // normalize uv [-1, 1]
+	  st = (st * 2.0) - 1.0;
+	  vec2 normalized = normalize(st);
+	  float uvDot = dot(normalized, FORWARD);
+	  float uvDot90 = dot(vec2(normalized.y, -normalized.x), FORWARD); // rotated 90deg
+
+	  // get angle between this pixel and the slice
+	  float angle = acos(uvDot) / PI;
+
+	  // left hand side
+	  float angle1 = (1.0 - angle) * 0.5;
+
+	  // right hand side
+	  float angle2 = angle * 0.5 + 0.5;
+
+	  // mix based on angle
+	  float spiral = mix(angle1, angle2, floor(uvDot90) + 1.0);
+
+	  // do wipe
+	  float t = fract(u_time * SPEED + 0.3); // adding small amt just so the preview looks nicer (whatever that means)
+	  // gl_FragColor = vec4(mix(color_one, color_two, floor(t - spiral)), 1.0); //Didn't work somehow ?
+	  gl_FragColor = vec4(mix(color_one, color_two, floor(u_time - spiral)), 1.0); // Work, only once
       }
     </script>
     <script type="module" src="/main.js"></script>
