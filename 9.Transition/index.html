@@ -23,7 +23,7 @@
 
       // This is to determine the head
 #define FORWARD normalize((vec2(0.5, 0.0) * 2.0) - 1.0)
-#define SPEED 0.4
+#define SPEED 0.7
 
       varying vec2 vUv;
       uniform float u_time;
@@ -54,14 +54,16 @@
 
 	  // right hand side
 	  float angle2 = angle * 0.5 + 0.5;
-
+	  
 	  // mix based on angle
 	  float spiral = mix(angle1, angle2, floor(uvDot90) + 1.0);
 
 	  // do wipe
-	  float t = fract(u_time * SPEED + 0.3); // adding small amt just so the preview looks nicer (whatever that means)
-	  // gl_FragColor = vec4(mix(color_one, color_two, floor(t - spiral)), 1.0); //Didn't work somehow ?
-	  gl_FragColor = vec4(mix(color_one, color_two, floor(u_time - spiral)), 1.0); // Work, only once
+	  // adding small amt just so the preview looks nicer (whatever that means)
+	  // adding +1.0 apparently fixed it?
+	  float t = fract(u_time * SPEED + 0.3) + 1.0; 
+	  gl_FragColor = vec4(mix(color_one, color_two, floor(t - spiral)), 1.0);
+	  // gl_FragColor = vec4(mix(color_one, color_two, t - spiral), 1.0);
       }
     </script>
     <script type="module" src="/main.js"></script>
