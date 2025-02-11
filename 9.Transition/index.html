@@ -61,9 +61,11 @@
 	  // do wipe
 	  // adding small amt just so the preview looks nicer (whatever that means)
 	  // adding +1.0 apparently fixed it?
-	  float t = fract(u_time * SPEED + 0.3) + 1.0; 
-	  gl_FragColor = vec4(mix(color_one, color_two, floor(t - spiral)), 1.0);
-	  // gl_FragColor = vec4(mix(color_one, color_two, t - spiral), 1.0);
+	  float t = fract(u_time * SPEED + 0.3) + 1.0;
+	  float spin = t - spiral;
+	  float smoothMix = smoothstep(0.874,  1.0, spin);
+	  // gl_FragColor = vec4(mix(color_one, color_two, floor(t - spiral)), 1.0);
+	  gl_FragColor = vec4(mix(color_one, color_two, smoothMix), 1.0);
       }
     </script>
     <script type="module" src="/main.js"></script>
