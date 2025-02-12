@@ -32,7 +32,7 @@
 	  return rand;
       }
 
-#define SPEED 1.0
+#define SPEED 0.8
 
       void main() {
 	  vec2 st = vUv;
@@ -41,12 +41,12 @@
 	  st.y *= 4.0;
 	  st = floor(st);
 
-	  float rate = random(st) + fract(u_time);
-	  rate = step(0.98, rate);
-	  vec3 transition = mix(BLACK, WHITE, rate);
+	  // float rate = random(st) + fract(u_time);
+	  float rate = random(st) + mod(u_time * SPEED, 2.0);	  
+	  rate = smoothstep(0.63, 0.98, rate);
+	  vec3 transition = mix(WHITE, BLACK, rate);
 
 	  gl_FragColor = vec4(transition, 1.0);
-	  gl_FragColor = vec4(vec3(rate), 1.0);
       }
     </script>
     <script type="module" src="/main.js"></script>
