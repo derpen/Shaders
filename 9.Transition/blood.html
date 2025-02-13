@@ -46,6 +46,8 @@
       void main() {
 	  // Lots stolen, no, inspired, from here
 	  // https://www.shadertoy.com/view/lsBGzh
+	  // TODO
+	  //
 	  
 	  vec2 st = vUv;
 
@@ -57,8 +59,12 @@
 	  
 	  float blod;
 	  st = blood(st, blod, t);
+	  //st.y = abs(st.y);
 
-	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0);
+	  float shape = smoothstep(0.8, 1.0, st.y); // blood shape
+	  vec3 color = vec3(1.0, 0.0, 0.0) * shape;
+	  
+	  gl_FragColor = vec4(vec3(color), 1.0);
       }
     </script>
     <script type="module" src="/main.js"></script>
