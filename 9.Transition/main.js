@@ -17,7 +17,8 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'Radial Wipe', href:'index.html'},
-    {text: 'Boxes', href:'boxes.html'},    
+    {text: 'Boxes', href:'boxes.html'},
+    {text: 'Blood', href:'blood.html'},        
 ];
 
 const ulElement = document.createElement('ul');

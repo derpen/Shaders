@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shader codes in HTML waow! :O</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="links-to-others"></div>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      
+      void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+#define PI 3.14159265359
+
+      varying vec2 vUv;
+      uniform float u_time;
+
+      vec2 blood(in vec2 st, out float blood, float t){
+	  st.y += 0.4 * sin(0.5 * 2.3 * st.x + st.y);
+	  st.y += 0.2 * sin(0.5 * 5.5 * st.x + st.y);
+	  st.y += 0.1 * sin(0.5 * 12.34 * st.x);
+	  st.y += 0.06 * sin(0.5 * 23.821 * st.x);
+
+	  float threshold = 5.3;
+
+	  st += vec2(0.0, -3.0) + t;
+
+	  if(st.y > threshold){
+	      blood = 1.0;
+	  } else {
+	      blood = 0.0;	      
+	  }
+	  
+	  return st;
+      }
+      
+      void main() {
+	  // Lots stolen, no, inspired, from here
+	  // https://www.shadertoy.com/view/lsBGzh
+	  
+	  vec2 st = vUv;
+
+	  st *= 4.0;
+	  
+	  float duration = 5.0;
+	  float rewind = 1.0;
+	  float t = mod(u_time, duration/rewind);
+	  
+	  float blod;
+	  st = blood(st, blod, t);
+
+	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0);
+      }
+    </script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
