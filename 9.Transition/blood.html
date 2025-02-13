@@ -24,45 +24,47 @@
       varying vec2 vUv;
       uniform float u_time;
 
-      vec2 blood(in vec2 st, out float blood, float t){
+      vec2 blood(in vec2 st, float t){
+	  // Stack bajillion of wave
 	  st.y += 0.4 * sin(0.5 * 2.3 * st.x + st.y);
 	  st.y += 0.2 * sin(0.5 * 5.5 * st.x + st.y);
 	  st.y += 0.1 * sin(0.5 * 12.34 * st.x);
 	  st.y += 0.06 * sin(0.5 * 23.821 * st.x);
 
-	  float threshold = 5.3;
-
-	  st += vec2(0.0, -3.0) + t;
-
-	  if(st.y > threshold){
-	      blood = 1.0;
-	  } else {
-	      blood = 0.0;	      
-	  }
+	  // -3.0 to make sure it starts at the top
+	  st.y += -3.0 + t;
 	  
 	  return st;
       }
+
+      float easeOut(float t){
+	  return 1.0 - pow(1.0 - t, 3.0);
+      }
+
+#define DURATION 5.0
       
       void main() {
 	  // Lots stolen, no, inspired, from here
 	  // https://www.shadertoy.com/view/lsBGzh
 	  // TODO
-	  //
+	  // Add ability to stop the blood at any y point
+	  // Also make it not loop (for use as blood effect)
 	  
 	  vec2 st = vUv;
 
 	  st *= 4.0;
 	  
-	  float duration = 5.0;
-	  float rewind = 1.0;
-	  float t = mod(u_time, duration/rewind);
+	  float t = mod(u_time, DURATION);
+
+	  // One of these ideas work to handle stopping
+	  // t = easeOut(t/DURATION);
+	  t = pow(t, 0.3);
 	  
-	  float blod;
-	  st = blood(st, blod, t);
-	  //st.y = abs(st.y);
+	  st = blood(st, t);
 
 	  float shape = smoothstep(0.8, 1.0, st.y); // blood shape
-	  vec3 color = vec3(1.0, 0.0, 0.0) * shape;
+	  vec3 color = 1.0 - vec3(shape);
+	  //color = vec3(1.0, 0.0, 0.0) * shape; // to make it red, optional
 	  
 	  gl_FragColor = vec4(vec3(color), 1.0);
       }
