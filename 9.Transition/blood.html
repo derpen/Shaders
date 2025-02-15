@@ -38,10 +38,15 @@
       }
 
       float easeOut(float t){
-	  return 1.0 - pow(1.0 - t, 3.0);
+	  return 1.0 - pow(1.0 - t, 3.0);	  
       }
 
-#define DURATION 5.0
+#define DURATION 2.0
+#define SPEED 3.0
+
+      // 1.0 to loop, anything else to not
+      // if not looping, then blood will stop at around the middle mark
+#define LOOP 0.1
       
       void main() {
 	  // Lots stolen, no, inspired, from here
@@ -54,12 +59,15 @@
 
 	  st *= 4.0;
 	  
-	  float t = mod(u_time, DURATION);
+	  float t = 0.0;
+	  if(LOOP == 1.0){
+	      t = mod(u_time, DURATION) * SPEED;	      
+	  } else {
+	      t = u_time;
+	      //t = easeOut(t/DURATION);
+	      t = easeOut(t);	      
+	  }
 
-	  // One of these ideas work to handle stopping
-	  // t = easeOut(t/DURATION);
-	  t = pow(t, 0.3);
-	  
 	  st = blood(st, t);
 
 	  float shape = smoothstep(0.8, 1.0, st.y); // blood shape
