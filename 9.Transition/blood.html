@@ -38,15 +38,18 @@
       }
 
       float easeOut(float t){
-	  return 1.0 - pow(1.0 - t, 3.0);	  
+	  return 1.0 - pow(1.0 - t, 3.0);
       }
 
-#define DURATION 2.0
-#define SPEED 3.0
-
       // 1.0 to loop, anything else to not
-      // if not looping, then blood will stop at around the middle mark
-#define LOOP 0.1
+#define LOOP 0.0
+#define LOOPTIME 2.0
+
+      // if not looping, these values will be used
+#define DURATION 3.0
+#define SPEED 3.0
+      // Value between 0.0 - 1.0, stops the blood at that y (hopefully)
+#define STOPPOINT 1.0 
       
       void main() {
 	  // Lots stolen, no, inspired, from here
@@ -61,11 +64,16 @@
 	  
 	  float t = 0.0;
 	  if(LOOP == 1.0){
-	      t = mod(u_time, DURATION) * SPEED;	      
+	      t = mod(u_time, LOOPTIME) * SPEED;	      
 	  } else {
 	      t = u_time;
-	      //t = easeOut(t/DURATION);
-	      t = easeOut(t);	      
+
+	      if(t < DURATION){
+		  t = easeOut(t/DURATION);
+	      }
+	      else {
+		  t = easeOut(1.0);		  
+	      }
 	  }
 
 	  st = blood(st, t);
