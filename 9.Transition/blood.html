@@ -49,7 +49,7 @@
 #define DURATION 3.0
 #define SPEED 3.0
       // Value between 0.0 - 1.0, stops the blood at that y (hopefully)
-#define STOPPOINT 1.0 
+#define STOPPOINT 0.5
       
       void main() {
 	  // Lots stolen, no, inspired, from here
@@ -74,6 +74,8 @@
 	      else {
 		  t = easeOut(1.0);		  
 	      }
+
+	      t += STOPPOINT * 4.0 - 0.8;
 	  }
 
 	  st = blood(st, t);
