@@ -25,24 +25,28 @@
       uniform float u_time;
 
 #define SPEED 1.0
-#define PASSES 3.0
       
       void main() {
 	  //Wishlist
 	  //Direction change
+	  //Dynamic Passes amount
 	  
 	  vec2 st = vUv;
 
-	  st.x += PASSES; //offset a little bit
-	  //float t = mod(u_time, PASSES);
-	  //st.x -= t * SPEED;
+	  st.x += 3.0; //offset a little bit
 	  st.x -= u_time * SPEED;
 
 	  vec2 transition_color = vec2(0.0);
-	  transition_color.x = smoothstep(PASSES - 1.0, PASSES, st.x);
+	  transition_color.x = 1.0 - step(2.0, st.x);
+	  //transition_color.x += 0.5;
+
+	  vec2 transition_color_two = vec2(0.0);
+	  transition_color_two.x = 1.0 - step(1.0, st.x);
+
+	  vec2 combine = transition_color - transition_color_two;
 
 	  float bg_color = 1.0;
-	  bg_color -= 1.0 - transition_color.x;
+	  bg_color -= combine.x;
 
 	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(vec3(bg_color), 1.0);
