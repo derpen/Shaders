@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shader codes in HTML waow! :O</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="links-to-others"></div>
+    <div id="container"></div>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      
+      void main() {
+	  vUv = uv;
+	  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+#define PI 3.14159265359
+
+      varying vec2 vUv;
+      uniform float u_time;
+
+#define SPEED 1.0
+#define PASSES 3.0
+      
+      void main() {
+	  //Wishlist
+	  //Direction change
+	  
+	  vec2 st = vUv;
+
+	  st.x += PASSES; //offset a little bit
+	  //float t = mod(u_time, PASSES);
+	  //st.x -= t * SPEED;
+	  st.x -= u_time * SPEED;
+
+	  vec2 transition_color = vec2(0.0);
+	  transition_color.x = smoothstep(PASSES - 1.0, PASSES, st.x);
+
+	  float bg_color = 1.0;
+	  bg_color -= 1.0 - transition_color.x;
+
+	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
+	  gl_FragColor = vec4(vec3(bg_color), 1.0);
+      }
+    </script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
