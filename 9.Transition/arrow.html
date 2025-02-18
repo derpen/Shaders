@@ -43,13 +43,20 @@
       }
 
       float arrow(vec2 st){
-	  st.x -= 0.5;
-	  
+	  st.x -= 0.7;
+
+	  float result;
+
 	  if(st.x > st.y){
-	      return 0.0;
-	  } else {
-	      return 1.0;	      
+	      result += 1.0;
+	  } 	  
+	  
+	  //Reverse
+	  if(1.0 - st.x < st.y){
+	      result += 1.0;
 	  }
+
+	  return result;
       }
       
       void main() {
@@ -59,13 +66,13 @@
 	  
 	  vec2 st = vUv;
 
-	  st.x += 3.0; //offset a little bit
-	  st.x -= mod(u_time * SPEED, 3.0);
+	  //st.x += 3.0; //offset a little bit
+	  //st.x -= mod(u_time * SPEED, 3.0);
 
 	  float bg_color = 1.0;
 	  bg_color -= split(st);
 
-	  //bg_color = arrow(st);
+	  bg_color = arrow(st);
 
 	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(vec3(bg_color), 1.0);
