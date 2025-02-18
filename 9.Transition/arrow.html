@@ -24,7 +24,33 @@
       varying vec2 vUv;
       uniform float u_time;
 
-#define SPEED 1.0
+#define SPEED 2.0
+
+      float split(vec2 st){
+	  // Middle part
+	  vec2 transition_color = vec2(0.0);
+	  transition_color.x = 1.0 - step(2.0, st.x);
+	  vec2 transition_color_two = vec2(0.0);
+	  transition_color_two.x = 1.0 - step(1.0, st.x);
+	  vec2 combine = transition_color - transition_color_two - 0.5;
+
+	  //Final Part
+	  transition_color = vec2(0.0); // reset
+	  transition_color.x = 1.0 - step(1.0, st.x);
+	  combine += transition_color * 2.0; // idk lol
+
+	  return combine.x;
+      }
+
+      float arrow(vec2 st){
+	  st.x -= 0.5;
+	  
+	  if(st.x > st.y){
+	      return 0.0;
+	  } else {
+	      return 1.0;	      
+	  }
+      }
       
       void main() {
 	  //Wishlist
@@ -34,19 +60,12 @@
 	  vec2 st = vUv;
 
 	  st.x += 3.0; //offset a little bit
-	  st.x -= u_time * SPEED;
-
-	  vec2 transition_color = vec2(0.0);
-	  transition_color.x = 1.0 - step(2.0, st.x);
-	  //transition_color.x += 0.5;
-
-	  vec2 transition_color_two = vec2(0.0);
-	  transition_color_two.x = 1.0 - step(1.0, st.x);
-
-	  vec2 combine = transition_color - transition_color_two;
+	  st.x -= mod(u_time * SPEED, 3.0);
 
 	  float bg_color = 1.0;
-	  bg_color -= combine.x;
+	  bg_color -= split(st);
+
+	  //bg_color = arrow(st);
 
 	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(vec3(bg_color), 1.0);
