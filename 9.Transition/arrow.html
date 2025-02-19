@@ -24,9 +24,28 @@
       varying vec2 vUv;
       uniform float u_time;
 
-#define SPEED 2.0
+#define SPEED 1.0
+
+      float arrow(vec2 st){
+	  st.x -= 0.5;
+
+	  float result;
+
+	  if(st.x > st.y){
+	      result += 1.0;
+	  } 	  
+	  
+	  //Reverse
+	  if(1.0 - st.x < st.y){
+	      result += 1.0;
+	  }
+	  
+	  return 1.0 - result;
+      }      
 
       float split(vec2 st){
+	  float res = 0.0;
+	  
 	  // Middle part
 	  vec2 transition_color = vec2(0.0);
 	  transition_color.x = 1.0 - step(2.0, st.x);
@@ -39,24 +58,8 @@
 	  transition_color.x = 1.0 - step(1.0, st.x);
 	  combine += transition_color * 2.0; // idk lol
 
+	  //return res;
 	  return combine.x;
-      }
-
-      float arrow(vec2 st){
-	  st.x -= 0.7;
-
-	  float result;
-
-	  if(st.x > st.y){
-	      result += 1.0;
-	  } 	  
-	  
-	  //Reverse
-	  if(1.0 - st.x < st.y){
-	      result += 1.0;
-	  }
-
-	  return result;
       }
       
       void main() {
@@ -70,12 +73,23 @@
 	  //st.x -= mod(u_time * SPEED, 3.0);
 
 	  float bg_color = 1.0;
-	  bg_color -= split(st);
+	  bg_color = split(st);
 
-	  bg_color = arrow(st);
+	  //bg_color += arrow(st);
 
-	  //gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
-	  gl_FragColor = vec4(vec3(bg_color), 1.0);
+	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
+	  //gl_FragColor = vec4(vec3(bg_color), 1.0);
+
+	  float split = 1.0;
+	  //st.x += split;
+	  st.x *= split;
+	  st.x -= mod(u_time * SPEED, split);
+	  vec2 f = fract(st);
+	  
+	  vec3 test = vec3(0.0);
+	  test = vec3(arrow(f));
+	  
+	  gl_FragColor = vec4(test, 1.0); 
       }
     </script>
     <script type="module" src="/main.js"></script>
