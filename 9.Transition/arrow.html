@@ -32,7 +32,7 @@
 	  float result;
 
 	  if(st.x > st.y){
-	      result += 1.0;
+	      result += 1.0;		  
 	  } 	  
 	  
 	  //Reverse
@@ -43,7 +43,7 @@
 	  return 1.0 - result;
       }      
 
-      float split(vec2 st){
+      float split_odd_even(vec2 st){
 	  float res = 0.0;
 	  
 	  // Middle part
@@ -61,6 +61,24 @@
 	  //return res;
 	  return combine.x;
       }
+
+      float oddEven(vec2 st, float split){
+	  float check = mod(st.x, split);
+	  return check/split;
+      }
+
+      float split_odd_even2(vec2 st, float split){
+	  float x = 0.0;
+
+	  x += sin(st.x * split);
+	  if(x < 0.0){
+	      x = 0.0;
+	  } else {
+	      x = 1.0;
+	  }
+	  
+	  return x;
+      }
       
       void main() {
 	  //Wishlist
@@ -69,26 +87,21 @@
 	  
 	  vec2 st = vUv;
 
-	  //st.x += 3.0; //offset a little bit
-	  //st.x -= mod(u_time * SPEED, 3.0);
-
-	  float bg_color = 1.0;
-	  bg_color = split(st);
-
-	  //bg_color += arrow(st);
-
-	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
-	  //gl_FragColor = vec4(vec3(bg_color), 1.0);
-
-	  float split = 1.0;
+	  float split = 4.0;
 	  //st.x += split;
 	  st.x *= split;
-	  st.x -= mod(u_time * SPEED, split);
+	  //st.x -= mod(u_time * SPEED, split); // animate movement
+	  st.x -= u_time * SPEED * 0.2; // animate movement with no loop
 	  vec2 f = fract(st);
+	  float arr = arrow(f);
+	  float check_odd = oddEven(floor(st), split);
 	  
 	  vec3 test = vec3(0.0);
 	  test = vec3(arrow(f));
+	  //test = vec3(check_odd);
+	  test = vec3(split_odd_even2(floor(st), split));
 	  
+	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(test, 1.0); 
       }
     </script>
