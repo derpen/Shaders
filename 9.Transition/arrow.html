@@ -61,23 +61,23 @@
 	  //return res;
 	  return combine.x;
       }
-
+      
       float oddEven(vec2 st, float split){
 	  float check = mod(st.x, split);
 	  return check/split;
       }
 
       float split_odd_even2(vec2 st, float split){
-	  float x = 0.0;
+	  float y = 0.0;
 
-	  x += sin(st.x * split);
-	  if(x < 0.0){
-	      x = 0.0;
+	  y = sin(st.x * split);
+	  if(y < y / split){
+	      y = 0.0;
 	  } else {
-	      x = 1.0;
+	      y = 1.0;
 	  }
 	  
-	  return x;
+	  return y;
       }
       
       void main() {
@@ -91,16 +91,15 @@
 	  //st.x += split;
 	  st.x *= split;
 	  //st.x -= mod(u_time * SPEED, split); // animate movement
-	  st.x -= u_time * SPEED * 0.2; // animate movement with no loop
+	  st.x -= u_time * SPEED * 0.8; // animate movement with no loop
 	  vec2 f = fract(st);
 	  float arr = arrow(f);
 	  float check_odd = oddEven(floor(st), split);
 	  
 	  vec3 test = vec3(0.0);
 	  test = vec3(arrow(f));
-	  //test = vec3(check_odd);
-	  test = vec3(split_odd_even2(floor(st), split));
-	  
+	  test = vec3(split_odd_even2(st, split));
+	  	  
 	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(test, 1.0); 
       }
