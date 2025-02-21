@@ -24,7 +24,7 @@
       varying vec2 vUv;
       uniform float u_time;
 
-#define SPEED 1.0
+#define SPEED 0.8
 
       float arrow(vec2 st){
 	  st.x -= 0.5;
@@ -42,25 +42,6 @@
 	  
 	  return 1.0 - result;
       }      
-
-      float split_odd_even(vec2 st){
-	  float res = 0.0;
-	  
-	  // Middle part
-	  vec2 transition_color = vec2(0.0);
-	  transition_color.x = 1.0 - step(2.0, st.x);
-	  vec2 transition_color_two = vec2(0.0);
-	  transition_color_two.x = 1.0 - step(1.0, st.x);
-	  vec2 combine = transition_color - transition_color_two - 0.5;
-
-	  //Final Part
-	  transition_color = vec2(0.0); // reset
-	  transition_color.x = 1.0 - step(1.0, st.x);
-	  combine += transition_color * 2.0; // idk lol
-
-	  //return res;
-	  return combine.x;
-      }
       
       float oddEven(vec2 st, float split){
 	  float check = mod(st.x, 2.0);
@@ -74,6 +55,11 @@
 	  return check;
       }
       
+      float EaseOutCubic(float x)
+      { 
+	  return 1.0 - pow(1.0 - x,3.0);
+      }      
+      
       void main() {
 	  //Wishlist
 	  //Direction change
@@ -82,7 +68,6 @@
 	  vec2 st = vUv;
 
 	  float split = 4.0;
-	  //st.x += split;
 	  st.x *= split;
 	  //st.x -= mod(u_time * SPEED, split); // animate movement
 	  //st.x -= u_time * SPEED * 0.8; // animate movement with no loop
@@ -90,15 +75,31 @@
 	  float arr = arrow(f);
 	  float check_odd = oddEven(floor(st), split);
 	  
-	  vec3 test = vec3(0.0);
-	  test = vec3(arrow(f));
+	  vec3 bg_shape = vec3(0.0);
+	  bg_shape = vec3(arrow(f));
 	  float oddevenmask = oddEven(st, split);
 	  if(oddevenmask == 1.0){
-	      test = 1.0 - test;
+	      bg_shape = 1.0 - bg_shape;
 	  }
+
+	  vec3 bg_shape_invert = 1.0 - bg_shape;
+
+	  vec3 bg_color = vec3(1.0); // start from white, trans to black
+	  float f_2 = fract(vUv.x * split / 2.0);
+	  vec3 movement = 1.0 - vec3(EaseOutCubic(smoothstep(0.0, 1.0, f_2 - u_time * SPEED * 0.5)));
+	  //bg_color = bg_shape;
+	  if(bg_shape.x == 0.0){
+	      bg_shape += movement;
+	  }
+	  if(bg_shape_invert.x == 0.0){
+	      bg_shape_invert += movement;
+	  }	  
+	  
+	  bg_color = bg_shape;
+	  //bg_color = movement;
 	  	  	  
 	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
-	  gl_FragColor = vec4(test, 1.0); 
+	  gl_FragColor = vec4(bg_color, 1.0); 
       }
     </script>
     <script type="module" src="/main.js"></script>
