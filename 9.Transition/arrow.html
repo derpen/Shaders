@@ -46,7 +46,24 @@
 	  }
 	  
 	  return 1.0 - result;
-      }      
+      }
+
+      float arrow_motion(vec2 st){
+	  st.x -= mix(-0.5, 0.5, fract(u_time * 0.4));
+
+	  float result;
+
+	  if(st.x > st.y){
+	      result += 1.0;		  
+	  } 	  
+	  
+	  //Reverse
+	  if(1.0 - st.x < st.y){
+	      result += 1.0;
+	  }
+	  
+	  return 1.0 - result;	  
+      } 
       
       float oddEven(vec2 st, float split){
 	  float check = mod(st.x, 2.0);
@@ -62,9 +79,6 @@
 
       vec3 bg_arrow(vec2 st, float split){
 	  vec2 f = fract(st);
-	  float arr = arrow(f);
-	  float check_odd = oddEven(floor(st), split);
-
 	  vec3 bg_shape = vec3(0.0);
 	  bg_shape = vec3(arrow(f));
 	  float oddevenmask = oddEven(st, split);
@@ -74,6 +88,18 @@
 	  
 	  return bg_shape;
       }
+
+      vec3 bg_arrow_motion(vec2 st, float split){
+	  vec2 f = fract(st);
+	  vec3 bg_shape = vec3(0.0);
+	  bg_shape = vec3(arrow_motion(f));
+	  float oddevenmask = oddEven(st, split);
+	  if(oddevenmask == 1.0){
+	      bg_shape = 1.0 - bg_shape;
+	  }
+	  
+	  return bg_shape;
+      }      
       
       void main() {
 	  //Wishlist
@@ -86,19 +112,21 @@
 	  float split = 4.0;
 	  st.x *= split;
 	  //st.x -= mod(u_time * SPEED, split); // animate movement
-	  st.x -= u_time * SPEED * 0.8; // animate movement with no loop
+	  //st.x -= u_time * SPEED * 0.8; // animate movement with no loop
 
 	  vec2 st_2 = vUv;
 	  st_2.x *= split;
 	  //st_2.x -= u_time * SPEED * 2.0 - 0.5; // animate movement with no loop	  
 
 	  vec3 bg_arrow_1 = bg_arrow(st, split);
-	  vec3 bg_arrow_2 = 1.0 - bg_arrow(st_2, split);
-	  vec3 bg_arrow_3 = 1.0 - bg_arrow(vec2(st.x - 0.7, st.y), split);
-	  //bg_arrow_2 = bg_arrow(st,split);
+	  vec3 bg_arrow_2 = bg_arrow_motion(st, split);
 
-	  vec3 color = bg_arrow_1 + bg_arrow_2;
-	  color = bg_arrow_2;
+	  vec3 bg_arrow_3 = 1.0 - bg_arrow_1;
+	  vec3 bg_arrow_4 = 1.0 - bg_arrow_2;
+
+	  vec3 color_1 = bg_arrow_1 * bg_arrow_2;
+	  vec3 color_2 = bg_arrow_3 * bg_arrow_4;
+	  vec3 color = color_1 + color_2;
 
 	  gl_FragColor = vec4(st.x, st.y, 0.0, 1.0); // See UV
 	  gl_FragColor = vec4(color, 1.0); // See UV	  
