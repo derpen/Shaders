@@ -37,14 +37,24 @@ links.appendChild(ulElement);
 
 const geometry = new THREE.PlaneGeometry( 2, 2 );
 
+const textureLoader = new THREE.TextureLoader();
+//const texture = textureLoader.load("../asset/bocchi.jpg");
+let texture1;
+
 const material = new THREE.ShaderMaterial({
     uniforms: {
 	u_time : { value: 1.0 },
+	texture : { value: texture1 },
     },
 
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
     fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
     // side: THREE.DoubleSide // Not needed honestly, unless I want rotation
+})
+
+textureLoader.load('/bocchi.jpg', (tex) => {
+    texture1 = tex;
+    material.uniforms.texture.value = texture1;
 })
 
 // const plane = new THREE.Mesh( geometry, material );
@@ -69,5 +79,6 @@ function animate(time) {
     // plane.rotation.x += 0.01;
     // plane.rotation.y += 0.01;    
     material.uniforms.u_time.value = time * 0.001; // Convert to seconds
+
     renderer.render(scene, camera);
 }
