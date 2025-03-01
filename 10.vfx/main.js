@@ -17,7 +17,9 @@ const links = document.getElementById( 'links-to-others' );
 
 const linksData = [
     {text: 'Fire', href:'index.html'},
-    {text: 'Fire Two', href:'fire2.html'},    
+    {text: 'Fire Two', href:'fire2.html'},
+    {text: 'CRT Effect', href:'crt.html'},
+    {text: 'Calm, still water', href:'water-calm.html'},            
 ];
 
 const ulElement = document.createElement('ul');
