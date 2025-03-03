@@ -23,12 +23,12 @@
       
       varying vec2 vUv;
       uniform float u_time;
-      uniform sampler2D texture1;
+      uniform sampler2D image;
       
       void main() {
 	  vec2 st = vUv;
 
-	  vec3 texColor = texture2D(texture1, st).rgb;
+	  vec3 texColor = texture2D(image, st).rgb;
 	  vec3 color = vec3(0.5);
 	  color = texColor;
 	      
