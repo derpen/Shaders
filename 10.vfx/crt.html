@@ -24,13 +24,24 @@
       varying vec2 vUv;
       uniform float u_time;
       uniform sampler2D image;
+
+      float random(vec2 st){
+	  return fract(sin(dot(st.xy,
+                               vec2(12.9898,78.233)))*
+		       43758.5453123);	  
+      }
       
       void main() {
 	  vec2 st = vUv;
 
-	  vec3 texColor = texture2D(image, st).rgb;
-	  vec3 color = vec3(0.5);
+	  st.xy += u_time;
+
+	  vec3 texColor = texture2D(image, vUv).rgb;
+	  vec3 color = vec3(0.0);
 	  color = texColor;
+	  
+	  vec3 noise = vec3(random(st));
+	  color *= noise;
 	      
 	  gl_FragColor = vec4(color, 1.0); 
       }
