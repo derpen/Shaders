@@ -30,6 +30,17 @@
                                vec2(12.9898,78.233)))*
 		       43758.5453123);	  
       }
+
+      float border(vec2 st, float width){
+	  float result;
+
+	  result = step(width, st.x);
+	  result *= 1.0 - step(1.0 - width, st.x);
+	  result *= step(width, st.y);
+	  result *= 1.0 - step(1.0 - width, st.y);	  
+
+	  return result;
+      }
       
       void main() {
 	  vec2 st = vUv;
@@ -41,7 +52,16 @@
 	  color = texColor;
 	  
 	  vec3 noise = vec3(random(st));
-	  color *= noise;
+	  //color *= noise;
+
+	  vec2 grid = vUv;
+	  grid *= 90000.0;
+	  vec2 gr = fract(grid);
+	  //gr = floor(grid);
+
+	  vec3 gr_color = vec3(border(gr, 0.04));
+	  color *= gr_color;
+	  //color = vec3(gr.x, gr.y, 0.0);
 	      
 	  gl_FragColor = vec4(color, 1.0); 
       }
