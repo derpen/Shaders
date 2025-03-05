@@ -25,43 +25,55 @@
       uniform float u_time;
       uniform sampler2D image;
 
-      float random(vec2 st){
-	  return fract(sin(dot(st.xy,
-                               vec2(12.9898,78.233)))*
-		       43758.5453123);	  
+      vec2 curveUV(vec2 st, vec2 curvature){
+	  //distort uv the closer to the edge
+	  st = st * 2.0 - 1.0;
+	  vec2 offset = abs(st.yx) / vec2(curvature.x, curvature.y);
+	  st = st + st * offset * offset;
+	  st = st * 0.5 + 0.5;
+	  return st;
       }
 
-      float border(vec2 st, float width){
-	  float result;
-
-	  result = step(width, st.x);
-	  result *= 1.0 - step(1.0 - width, st.x);
-	  result *= step(width, st.y);
-	  result *= 1.0 - step(1.0 - width, st.y);	  
-
-	  return result;
+      vec3 scanLine(float st, float reso, float opacity){
+	  float intensity = sin(st * reso * PI * 2.0);
+	  intensity = ((0.5 * intensity) + 0.5) * 0.9 + 0.1;
+	  return vec3(pow(intensity, opacity));
       }
       
+      vec3 vignetteIntensity(vec2 uv, vec2 resolution, float opacity)
+      {
+          float intensity = uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y);
+          return vec3(clamp(pow((resolution.x / 4.0) * intensity, opacity), 0.0, 1.0));
+      }      
+      
       void main() {
+	  //https://babylonjs.medium.com/retro-crt-shader-a-post-processing-effect-study-1cb3f783afbc	  
 	  vec2 st = vUv;
 
-	  st.xy += u_time;
-
-	  vec3 texColor = texture2D(image, vUv).rgb;
+	  // Curve edge
+	  vec2 curvature = vec2(3.0, 3.0);
+	  st = curveUV(st, curvature);
 	  vec3 color = vec3(0.0);
-	  color = texColor;
+	  if(st.x < 0.0 || st.y < 0.0 || st.x > 1.0 || st.y > 1.0){
+	      color = vec3(0.0);
+	  }
+	  else {
+	      color = texture2D(image, st).rgb;		  
+	  }
 	  
-	  vec3 noise = vec3(random(st));
-	  //color *= noise;
+	  // scan line
+	  vec2 scanLineOpacity = vec2(0.2, 0.2);
+	  vec2 resolution = vec2(480.0, 320.0);
+	  color *= scanLine(st.x, resolution.x, scanLineOpacity.x);
+	  color *= scanLine(st.y, resolution.y, scanLineOpacity.y);
 
-	  vec2 grid = vUv;
-	  grid *= 90000.0;
-	  vec2 gr = fract(grid);
-	  //gr = floor(grid);
+	  //vignette
+	  //vignetteIntensity(vec2 uv, vec2 resolution, float opacity)	  
+	  color *= vignetteIntensity(st, resolution, 2.0);
 
-	  vec3 gr_color = vec3(border(gr, 0.04));
-	  color *= gr_color;
-	  //color = vec3(gr.x, gr.y, 0.0);
+	  // brightness
+	  float brightness = 1.5;
+	  color *= vec3(brightness);
 	      
 	  gl_FragColor = vec4(color, 1.0); 
       }
