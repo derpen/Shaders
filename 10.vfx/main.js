@@ -39,7 +39,7 @@ const geometry = new THREE.PlaneGeometry( 2, 2 );
 
 const textureLoader = new THREE.TextureLoader();
 let texture = textureLoader.load('/bocchi.jpg');
-texture = textureLoader.load('/osaka.png');
+//texture = textureLoader.load('/osaka.png');
 
 const material = new THREE.ShaderMaterial({
     uniforms: {

@@ -64,11 +64,16 @@
 	  // scan line
 	  vec2 scanLineOpacity = vec2(0.2, 0.2);
 	  vec2 resolution = vec2(480.0, 320.0);
-	  color *= scanLine(st.x, resolution.x, scanLineOpacity.x);
-	  color *= scanLine(st.y, resolution.y, scanLineOpacity.y);
+	  vec2 st_2 = vUv;
+	  float speed = 0.5;
+	  st_2 += u_time * speed;
+	  // color *= scanLine(st.x, resolution.x, scanLineOpacity.x);
+	  // color *= scanLine(st.y, resolution.y, scanLineOpacity.y);
+	  
+	  color *= scanLine(st_2.x, resolution.x, scanLineOpacity.x);
+	  color *= scanLine(st_2.y, resolution.y, scanLineOpacity.y);	  
 
 	  //vignette
-	  //vignetteIntensity(vec2 uv, vec2 resolution, float opacity)	  
 	  color *= vignetteIntensity(st, resolution, 2.0);
 
 	  // brightness
